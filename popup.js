@@ -144,28 +144,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   
-  // Fallback Indian holidays data for 2025
-  function getIndianHolidaysFallback(year) {
-    // Major Indian national and popular holidays for 2025
-    return [
-      { date: `${year}-01-01`, name: "New Year's Day", localName: "New Year's Day" },
-      { date: `${year}-01-14`, name: "Makar Sankranti", localName: "Makar Sankranti" },
-      { date: `${year}-01-26`, name: "Republic Day", localName: "Republic Day" },
-      { date: `${year}-03-13`, name: "Holi", localName: "Holi" },
-      { date: `${year}-03-14`, name: "Holi (Second Day)", localName: "Dhulandi" },
-      { date: `${year}-03-31`, name: "Ram Navami", localName: "Ram Navami" },
-      { date: `${year}-04-14`, name: "Dr. Ambedkar Jayanti", localName: "Ambedkar Jayanti" },
-      { date: `${year}-04-18`, name: "Good Friday", localName: "Good Friday" },
-      { date: `${year}-05-01`, name: "Labour Day", localName: "May Day" },
-      { date: `${year}-05-12`, name: "Buddha Purnima", localName: "Buddha Purnima" },
-      { date: `${year}-08-15`, name: "Independence Day", localName: "Independence Day" },
-      { date: `${year}-08-16`, name: "Janmashtami", localName: "Krishna Janmashtami" },
-      { date: `${year}-09-07`, name: "Ganesh Chaturthi", localName: "Ganesh Chaturthi" },
-      { date: `${year}-10-02`, name: "Gandhi Jayanti", localName: "Gandhi Jayanti" },
-      { date: `${year}-10-12`, name: "Dussehra", localName: "Vijayadashami" },
-      { date: `${year}-11-01`, name: "Diwali", localName: "Deepavali" },
-      { date: `${year}-11-15`, name: "Guru Nanak Jayanti", localName: "Guru Nanak Jayanti" },
-      { date: `${year}-12-25`, name: "Christmas Day", localName: "Christmas Day" }
-    ];
+// Helper function to fetch and parse local JSON files within the extension
+async function fetchLocalHolidays(filePath) {
+  try {
+    // Construct the full URL to the local file within the extension
+    const url = chrome.runtime.getURL(filePath);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${filePath}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error loading holidays from ${filePath}:`, error);
+    return []; // Return an empty array to prevent further errors
   }
+}
+
+/**
+ * Fetches Indian holidays from local JSON files (fixed and floating).
+ * It then formats the dates by prepending the provided year.
+ *
+ * @param {number} year The year for which to retrieve the holidays.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of holiday objects.
+ */
+async function getIndianHolidaysFallback(year) {
+  const fixedHolidays = await fetchLocalHolidays('holidays/fixed.json');
+  const floatingHolidays = await fetchLocalHolidays('holidays/floating.json');
+
+  // Combine both lists
+  const allHolidays = [...fixedHolidays, ...floatingHolidays];
+
+  // Format the dates by prepending the year, matching your original function's output format
+  const formattedHolidays = allHolidays.map(holiday => ({
+    date: `${year}-${holiday.date}`,
+    name: holiday.name,
+    localName: holiday.localName
+  }));
+
+  // You might want to sort these holidays by date if the consuming function expects them sorted.
+  formattedHolidays.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  return formattedHolidays;
+}
 });
