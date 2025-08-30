@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const holidaysContainer = document.getElementById('holidaysContainer');
   const refreshBtn = document.getElementById('refreshBtn');
   const testBtn = document.getElementById('testBtn');
+  const todayDateDisplay = document.getElementById('todayDateDisplay'); // Get the new element
+
+  // Display today's date immediately
+  displayTodayDate();
   
   // Initialize
   await loadHolidays();
@@ -11,6 +15,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Event listeners
   refreshBtn.addEventListener('click', loadHolidays);
   testBtn.addEventListener('click', testBanner);
+
+  // New function to display today's date
+  function displayTodayDate() {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-IN', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    todayDateDisplay.textContent = formattedDate;
+  }
   
   async function loadHolidays() {
     try {
@@ -23,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       // Use fallback data first, then try API enhancement
       const year = new Date().getFullYear();
-      let holidays = getIndianHolidaysFallback(year);
+      let holidays = await getIndianHolidaysFallback(year); // Await the fallback function
       
       try {
         // Try to enhance with API data
@@ -74,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       // Show fallback holidays
       const year = new Date().getFullYear();
-      const fallbackHolidays = getIndianHolidaysFallback(year);
+      const fallbackHolidays = await getIndianHolidaysFallback(year); // Await the fallback function
       const { weekStart, weekEnd } = getCurrentWeekDates();
       const weekHolidays = fallbackHolidays.filter(holiday => {
         const holidayDate = new Date(holiday.date);
