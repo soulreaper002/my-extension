@@ -1,80 +1,128 @@
-// Background script (service worker) - runs in the background
-console.log('My Extension background script loaded');
+// Holiday Reminder Background Script
+console.log('Holiday Reminder: Background script loaded');
 
-// Extension installation/startup
+// Extension installation
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log('Extension installed:', details.reason);
+  console.log('Holiday Reminder installed:', details.reason);
   
   if (details.reason === 'install') {
-    // Set default settings
+    // Set default country to US
     chrome.storage.sync.set({
-      extensionEnabled: true,
-      highlightColor: '#ffff99'
+      selectedCountry: 'US'
     });
     
-    // Show welcome notification (optional)
-    console.log('Welcome to My Extension!');
+    console.log('Holiday Reminder: Default settings saved');
   }
 });
 
-// Handle messages from content scripts or popup
+// Handle tab updates - check if user visits timesheet.com
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  // Only act when page is completely loaded
+  if (changeInfo.status === 'complete' && tab.url) {
+    // Check if it's timesheet.com
+    if (tab.url.includes('timesheet.com')) {
+      console.log('Holiday Reminder: User visited timesheet.com');
+      
+      // Optional: Show browser notification
+      try {
+        await chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'icons/icon-48.png', // Make sure this exists
+          title: '🗓️ Holiday Reminder',
+          message: 'Checking for holidays this week...',
+          priority: 1
+        });
+        
+        // Clear notification after 3 seconds
+        setTimeout(() => {
+          chrome.notifications.clear('holiday-notification');
+        }, 3000);
+        
+      } catch (error) {
+        console.log('Notification permission not granted or icon missing');
+      }
+      
+      // The content script will handle showing the banner
+      // We could also inject the content script here if needed
+    }
+  }
+});
+
+// Handle messages from content script or popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
-    case 'getData':
-      // Get data from storage
-      chrome.storage.sync.get(['extensionEnabled'], (result) => {
-        sendResponse({ enabled: result.extensionEnabled || true });
-      });
+    case 'getHolidays':
+      // Content script can request holidays through background
+      fetchHolidays(request.country, request.year)
+        .then(holidays => sendResponse({ holidays }))
+        .catch(error => sendResponse({ error: error.message }));
       return true; // Keep message channel open
       
-    case 'saveData':
-      // Save data to storage
-      chrome.storage.sync.set(request.data, () => {
-        sendResponse({ success: true });
+    case 'logHolidayView':
+      console.log('Holiday banner shown:', request.data);
+      sendResponse({ logged: true });
+      break;
+      
+    case 'saveSettings':
+      chrome.storage.sync.set(request.settings, () => {
+        sendResponse({ saved: true });
       });
       return true;
       
-    case 'logInfo':
-      console.log('Info from content script:', request.info);
-      sendResponse({ received: true });
-      break;
+    case 'getSettings':
+      chrome.storage.sync.get(request.keys || null, (result) => {
+        sendResponse(result);
+      });
+      return true;
       
     default:
       sendResponse({ error: 'Unknown action' });
   }
 });
 
-// Handle tab updates
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url) {
-    console.log('Page loaded:', tab.url);
+// Fetch holidays function (can be used by content script)
+async function fetchHolidays(country, year) {
+  try {
+    const response = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`);
     
-    // You can perform actions when pages load
-    // For example, inject CSS or notify content scripts
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching holidays:', error);
+    throw error;
+  }
+}
+
+// Periodic cleanup of old storage entries (optional)
+chrome.alarms?.create?.('cleanupStorage', { periodInMinutes: 60 * 24 }); // Daily
+
+chrome.alarms?.onAlarm?.addListener((alarm) => {
+  if (alarm.name === 'cleanupStorage') {
+    cleanupOldStorageEntries();
   }
 });
 
-// Handle extension icon clicks (when no popup is defined)
-chrome.action.onClicked.addListener((tab) => {
-  // This won't run if popup.html is defined in manifest
-  console.log('Extension icon clicked');
-});
-
-// Context menu (right-click) functionality
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'myExtensionAction',
-    title: 'Process with My Extension',
-    contexts: ['selection', 'page']
-  });
-});
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'myExtensionAction') {
-    // Send message to content script
-    chrome.tabs.sendMessage(tab.id, {
-      action: 'processSelection',
-      selectedText: info.selectionText
+async function cleanupOldStorageEntries() {
+  try {
+    const items = await chrome.storage.local.get(null);
+    const today = new Date().toDateString();
+    
+    // Remove old "holiday_shown_" entries
+    const keysToRemove = [];
+    Object.keys(items).forEach(key => {
+      if (key.startsWith('holiday_shown_') && !key.includes(today)) {
+        keysToRemove.push(key);
+      }
     });
+    
+    if (keysToRemove.length > 0) {
+      await chrome.storage.local.remove(keysToRemove);
+      console.log(`Cleaned up ${keysToRemove.length} old storage entries`);
+    }
+  } catch (error) {
+    console.error('Error cleaning up storage:', error);
   }
-});
+}
