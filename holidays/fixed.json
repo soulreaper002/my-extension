@@ -1,0 +1,37 @@
+[
+    {
+        "date": "2025-01-14",
+        "name": "Makara Sankranti",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-03-31",
+        "name": "Ramzan ID",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-04-18",
+        "name": "Good Friday",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-05-01",
+        "name": "May Day",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-08-27",
+        "name": "Ganesh Chaturthi",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-10-20",
+        "name": "Deepavali (Naraka Chaturdashi)",
+        "type": "Fixed"
+    },
+    {
+        "date": "2025-12-25",
+        "name": "Christmas",
+        "type": "Fixed"
+    }
+]
