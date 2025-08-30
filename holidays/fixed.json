@@ -1,37 +1,9 @@
 [
-    {
-        "date": "2025-01-14",
-        "name": "Makara Sankranti",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-03-31",
-        "name": "Ramzan ID",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-04-18",
-        "name": "Good Friday",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-05-01",
-        "name": "May Day",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-08-27",
-        "name": "Ganesh Chaturthi",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-10-20",
-        "name": "Deepavali (Naraka Chaturdashi)",
-        "type": "Fixed"
-    },
-    {
-        "date": "2025-12-25",
-        "name": "Christmas",
-        "type": "Fixed"
-    }
+  { "date": "01-01", "name": "New Year's Day", "localName": "New Year's Day" },
+  { "date": "01-26", "name": "Republic Day", "localName": "Republic Day" },
+  { "date": "04-14", "name": "Dr. Ambedkar Jayanti", "localName": "Ambedkar Jayanti" },
+  { "date": "05-01", "name": "Labour Day", "localName": "May Day" },
+  { "date": "08-15", "name": "Independence Day", "localName": "Independence Day" },
+  { "date": "10-02", "name": "Gandhi Jayanti", "localName": "Gandhi Jayanti" },
+  { "date": "12-25", "name": "Christmas Day", "localName": "Christmas Day" }
 ]
