@@ -1,27 +1,13 @@
 [
-    {
-        "date": "2025-01-01",
-        "name": "New Year Day",
-        "type": "Floating"
-    },
-    {
-        "date": "2025-02-26",
-        "name": "Maha Shivaratri",
-        "type": "Floating"
-    },
-    {
-        "date": "2025-03-14",
-        "name": "Holi",
-        "type": "Floating"
-    },
-    {
-        "date": "2025-08-08",
-        "name": "Varamahalakshmi",
-        "type": "Floating"
-    },
-    {
-        "date": "2025-09-05",
-        "name": "Id-E-Milad",
-        "type": "Floating"
-    }
+  { "date": "01-14", "name": "Makar Sankranti", "localName": "Makar Sankranti" },
+  { "date": "03-13", "name": "Holi", "localName": "Holi" },
+  { "date": "03-14", "name": "Holi (Second Day)", "localName": "Dhulandi" },
+  { "date": "03-31", "name": "Ram Navami", "localName": "Ram Navami" },
+  { "date": "04-18", "name": "Good Friday", "localName": "Good Friday" },
+  { "date": "05-12", "name": "Buddha Purnima", "localName": "Buddha Purnima" },
+  { "date": "08-16", "name": "Janmashtami", "localName": "Krishna Janmashtami" },
+  { "date": "09-07", "name": "Ganesh Chaturthi", "localName": "Ganesh Chaturthi" },
+  { "date": "10-12", "name": "Dussehra", "localName": "Vijayadashami" },
+  { "date": "11-01", "name": "Diwali", "localName": "Deepavali" },
+  { "date": "11-15", "name": "Guru Nanak Jayanti", "localName": "Guru Nanak Jayanti" }
 ]
