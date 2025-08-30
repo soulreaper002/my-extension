@@ -1,0 +1,27 @@
+[
+    {
+        "date": "2025-01-01",
+        "name": "New Year Day",
+        "type": "Floating"
+    },
+    {
+        "date": "2025-02-26",
+        "name": "Maha Shivaratri",
+        "type": "Floating"
+    },
+    {
+        "date": "2025-03-14",
+        "name": "Holi",
+        "type": "Floating"
+    },
+    {
+        "date": "2025-08-08",
+        "name": "Varamahalakshmi",
+        "type": "Floating"
+    },
+    {
+        "date": "2025-09-05",
+        "name": "Id-E-Milad",
+        "type": "Floating"
+    }
+]
