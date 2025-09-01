@@ -1,5 +1,4 @@
-# my-extension
-My first browser extension
+In-Holiday
 
 ## Project Structure
 my-extension/
@@ -40,49 +39,9 @@ You need to create icon files in the `icons/` folder:
 - `icon-48.png` (48x48 pixels)
 - `icon-128.png` (128x128 pixels)
 
-You can create simple colored squares or use online icon generators.
-
-## How It Works
-
-1. **Popup**: Click the extension icon to open the popup with buttons
-2. **Highlight Text**: Toggles yellow highlighting on all paragraphs
-3. **Change Background**: Changes the page background color
-4. **Get Page Info**: Shows count of links and images
-5. **Floating Button**: Appears on every page, click for a greeting
-
-## Customization
-
-- Edit `manifest.json` to change extension name, permissions, etc.
-- Modify `popup.html` and `popup.js` to change the popup interface
-- Update `content.js` to add new page interactions
-- Customize `background.js` for background tasks and storage
-
-## Testing
-
-1. Install the extension
-2. Visit any website
-3. Click the extension icon to open popup
-4. Try the different buttons
-5. Look for the floating button on the page
-6. Check browser console for debug messages
-
-## Next Steps
-
-- Add more sophisticated UI components
-- Implement data persistence with chrome.storage
-- Add keyboard shortcuts
-- Create options page for settings
-- Add more content script functionality
-- Implement cross-page communication
-
-## Permissions Used
-
-- `activeTab`: Access to current active tab
-- `storage`: Save extension settings
-- `contextMenus`: Right-click menu items (implicit)
-
-## Browser Compatibility
-
 - Chrome (Manifest V3)
 - Edge (Manifest V3)
 - Other Chromium-based browsers
+
+
+- You can change Url where you want pop up by adding the URL in manifest.json file
